@@ -77,12 +77,12 @@ resource "aws_iam_role_policy_attachment" "ssm-managed-instance-core" {
 }
 
 resource "aws_security_group" "server" {
-  name        = "ec2-sessionmanager-server"
+  name        = "ec2-ssm-${var.workload}-server"
   description = "Controls access for EC2 via Session Manager"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "sg-sessionmanager-server"
+    Name = "sg-ssm-${var.workload}-server"
   }
 }
 
@@ -178,35 +178,3 @@ resource "aws_vpc_endpoint" "ssmmessages" {
 
   private_dns_enabled = true
 }
-
-# resource "aws_security_group" "allow_public_subnet" {
-#   name        = "rds-pe-${var.workload}"
-#   description = "Allow TLS inbound traffic to RDS Postgres"
-#   vpc_id      = var.vpc_id
-
-#   tags = {
-#     Name = "sg-rds-pe-${var.workload}"
-#   }
-# }
-
-# resource "aws_security_group_rule" "ingress_from_public_subnet" {
-#   description       = "Allows connection public subnet"
-#   type              = "ingress"
-#   from_port         = 5432
-#   to_port           = 5432
-#   protocol          = "tcp"
-#   cidr_blocks       = [var.vpc_cidr_block]
-#   ipv6_cidr_blocks  = []
-#   security_group_id = aws_security_group.allow_public_subnet.id
-# }
-
-# resource "aws_security_group_rule" "egress_from_pe_to_rds" {
-#   description       = "Allows connection from the private endpoint to the RDS"
-#   type              = "egress"
-#   from_port         = 5432
-#   to_port           = 5432
-#   protocol          = "tcp"
-#   cidr_blocks       = [var.vpc_cidr_block]
-#   ipv6_cidr_blocks  = []
-#   security_group_id = aws_security_group.allow_public_subnet.id
-# }
