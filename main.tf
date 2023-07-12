@@ -29,3 +29,11 @@ module "nat-instance" {
   subnet   = module.network.subnet_public1_id
   az       = local.az1
 }
+
+module "server" {
+  source   = "./modules/server"
+  workload = var.workload
+  vpc_id   = module.network.vpc_id
+  subnet   = module.network.subnet_private1_id
+  az       = local.az1
+}
