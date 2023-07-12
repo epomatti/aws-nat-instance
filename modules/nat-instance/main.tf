@@ -3,8 +3,8 @@ resource "aws_iam_instance_profile" "nat_instance" {
   role = aws_iam_role.nat_instance.id
 }
 
-resource "aws_instance" "jumpserver" {
-  ami           = "ami-01107263728f3bef4"
+resource "aws_instance" "nat_instance" {
+  ami           = "ami-024e6efaf93d85776"
   instance_type = "t3.micro"
 
   associate_public_ip_address = true
