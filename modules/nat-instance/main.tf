@@ -1,5 +1,5 @@
 resource "aws_iam_instance_profile" "nat_instance" {
-  name = "${var.workload}-natinstance"
+  name = "${var.workload}-nat"
   role = aws_iam_role.nat_instance.id
 }
 
@@ -36,14 +36,14 @@ resource "aws_instance" "nat_instance" {
   }
 
   tags = {
-    Name = "${var.workload}-natinstance"
+    Name = "${var.workload}-nat"
   }
 }
 
 ### IAM Role ###
 
 resource "aws_iam_role" "nat_instance" {
-  name = "natinstance-${var.workload}"
+  name = "nat-${var.workload}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -70,12 +70,12 @@ resource "aws_iam_role_policy_attachment" "ssm-managed-instance-core" {
 }
 
 resource "aws_security_group" "nat_instance" {
-  name        = "ec2-sessionmanager-natinstance"
+  name        = "ec2-ssm-${var.workload}-nat"
   description = "Controls access for EC2 via Session Manager"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "sg-sessionmanager-natinstance"
+    Name = "sg-ssm-${var.workload}-nat"
   }
 }
 
