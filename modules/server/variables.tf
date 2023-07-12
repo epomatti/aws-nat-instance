@@ -17,3 +17,11 @@ variable "vpc_id" {
 variable "region" {
   type = string
 }
+
+variable "route_table_id" {
+  type = string
+}
+
+variable "nat_network_interface_id" {
+  type = string
+}

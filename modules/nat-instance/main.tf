@@ -15,7 +15,9 @@ resource "aws_instance" "nat_instance" {
   iam_instance_profile = aws_iam_instance_profile.nat_instance.id
   user_data            = file("${path.module}/userdata.sh")
 
-  # Enables metadata V2
+  # Requirement for NAT
+  source_dest_check = false
+
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"

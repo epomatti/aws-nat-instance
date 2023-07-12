@@ -11,3 +11,5 @@ sudo apt -y install telnet
 
 # NAT - https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
 sudo sysctl -w net.ipv4.ip_forward=1
+sudo iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
+sudo iptables-save
