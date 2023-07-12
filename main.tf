@@ -36,4 +36,5 @@ module "server" {
   vpc_id   = module.network.vpc_id
   subnet   = module.network.subnet_private1_id
   az       = local.az1
+  region   = var.region
 }

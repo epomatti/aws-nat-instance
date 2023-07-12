@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 su ec2-user
 
-sudo yum makecache
-sudo yum update
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
 
-sudo yum -y install telnet
+sudo apt update
+sudo apt upgrade -y
+
+sudo apt -y install telnet

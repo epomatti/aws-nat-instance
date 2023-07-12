@@ -81,9 +81,9 @@ resource "aws_security_group" "server" {
 
 resource "aws_security_group_rule" "ingress_ssh" {
   type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = []
   security_group_id = aws_security_group.server.id
@@ -92,9 +92,114 @@ resource "aws_security_group_rule" "ingress_ssh" {
 resource "aws_security_group_rule" "egress_internet" {
   type              = "egress"
   from_port         = 0
-  to_port           = 0
+  to_port           = 65535
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = []
   security_group_id = aws_security_group.server.id
 }
+
+### VPC Endpoints for Session Manager ###
+
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-create-vpc.html
+# https://repost.aws/knowledge-center/ec2-systems-manager-vpc-endpoints
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ssm"
+  vpc_endpoint_type = "Interface"
+  auto_accept       = true
+
+  subnet_ids = [var.subnet]
+
+  ip_address_type = "ipv4"
+
+  security_group_ids = [
+    aws_security_group.server.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ec2messages"
+  vpc_endpoint_type = "Interface"
+  auto_accept       = true
+
+  subnet_ids = [var.subnet]
+
+  ip_address_type = "ipv4"
+
+  security_group_ids = [
+    aws_security_group.server.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ec2" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ec2"
+  vpc_endpoint_type = "Interface"
+  auto_accept       = true
+
+  subnet_ids = [var.subnet]
+
+  ip_address_type = "ipv4"
+
+  security_group_ids = [
+    aws_security_group.server.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ssmmessages"
+  vpc_endpoint_type = "Interface"
+  auto_accept       = true
+
+  subnet_ids = [var.subnet]
+
+  ip_address_type = "ipv4"
+
+  security_group_ids = [
+    aws_security_group.server.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+# resource "aws_security_group" "allow_public_subnet" {
+#   name        = "rds-pe-${var.workload}"
+#   description = "Allow TLS inbound traffic to RDS Postgres"
+#   vpc_id      = var.vpc_id
+
+#   tags = {
+#     Name = "sg-rds-pe-${var.workload}"
+#   }
+# }
+
+# resource "aws_security_group_rule" "ingress_from_public_subnet" {
+#   description       = "Allows connection public subnet"
+#   type              = "ingress"
+#   from_port         = 5432
+#   to_port           = 5432
+#   protocol          = "tcp"
+#   cidr_blocks       = [var.vpc_cidr_block]
+#   ipv6_cidr_blocks  = []
+#   security_group_id = aws_security_group.allow_public_subnet.id
+# }
+
+# resource "aws_security_group_rule" "egress_from_pe_to_rds" {
+#   description       = "Allows connection from the private endpoint to the RDS"
+#   type              = "egress"
+#   from_port         = 5432
+#   to_port           = 5432
+#   protocol          = "tcp"
+#   cidr_blocks       = [var.vpc_cidr_block]
+#   ipv6_cidr_blocks  = []
+#   security_group_id = aws_security_group.allow_public_subnet.id
+# }
