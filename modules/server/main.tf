@@ -4,7 +4,7 @@ resource "aws_iam_instance_profile" "main" {
 }
 
 resource "aws_instance" "server" {
-  ami           = "ami-01107263728f3bef4"
+  ami           = "ami-08fdd91d87f63bb09"
   instance_type = "t4g.nano"
 
   associate_public_ip_address = true
