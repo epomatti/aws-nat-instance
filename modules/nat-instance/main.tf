@@ -5,7 +5,7 @@ resource "aws_iam_instance_profile" "nat_instance" {
 
 resource "aws_instance" "nat_instance" {
   ami           = "ami-024e6efaf93d85776"
-  instance_type = "t3.micro"
+  instance_type = "t4g.nano"
 
   associate_public_ip_address = true
   subnet_id                   = var.subnet

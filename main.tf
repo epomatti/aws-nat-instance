@@ -30,11 +30,11 @@ module "nat-instance" {
   az       = local.az1
 }
 
-module "server" {
-  source   = "./modules/server"
-  workload = var.workload
-  vpc_id   = module.network.vpc_id
-  subnet   = module.network.subnet_private1_id
-  az       = local.az1
-  region   = var.region
-}
+# module "server" {
+#   source   = "./modules/server"
+#   workload = var.workload
+#   vpc_id   = module.network.vpc_id
+#   subnet   = module.network.subnet_private1_id
+#   az       = local.az1
+#   region   = var.region
+# }
