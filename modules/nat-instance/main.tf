@@ -4,7 +4,7 @@ resource "aws_iam_instance_profile" "nat_instance" {
 }
 
 resource "aws_instance" "nat_instance" {
-  ami           = "ami-08fdd91d87f63bb09"
+  ami           = "ami-05983a09f7dc1c18f"
   instance_type = "t4g.nano"
 
   associate_public_ip_address = true
@@ -27,7 +27,8 @@ resource "aws_instance" "nat_instance" {
   ebs_optimized = false
 
   root_block_device {
-    encrypted = true
+    encrypted   = true
+    volume_type = "gp3"
   }
 
   lifecycle {
