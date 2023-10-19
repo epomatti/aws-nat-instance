@@ -14,3 +14,9 @@ sysctl -ar ip_forward
 ```
 
 To test it, connect to the private server using Sessions Manager.
+
+If you wish to enable VPC endpoints, set the variable:
+
+```terraform
+create_vpc_endpoints = false
+```

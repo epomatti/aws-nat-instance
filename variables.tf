@@ -7,3 +7,8 @@ variable "workload" {
   type    = string
   default = "corp"
 }
+
+variable "create_vpc_endpoints" {
+  type    = bool
+  default = false
+}

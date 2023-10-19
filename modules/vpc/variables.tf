@@ -1,11 +1,7 @@
 variable "region" {
-  type    = string
+  type = string
 }
 
 variable "workload" {
-  type    = string
-}
-
-variable "az" {
   type = string
 }

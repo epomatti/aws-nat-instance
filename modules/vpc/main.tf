@@ -1,5 +1,8 @@
-### VPC ###
+locals {
+  az1 = "${var.region}a"
+}
 
+### VPC ###
 resource "aws_vpc" "main" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
@@ -13,7 +16,6 @@ resource "aws_vpc" "main" {
 }
 
 ### Internet Gateway ###
-
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -23,7 +25,6 @@ resource "aws_internet_gateway" "main" {
 }
 
 ### Private Subnet ###
-
 resource "aws_route_table" "private1" {
   vpc_id = aws_vpc.main.id
   tags = {
@@ -32,9 +33,10 @@ resource "aws_route_table" "private1" {
 }
 
 resource "aws_subnet" "private1" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.100.0/24"
-  availability_zone = var.az
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.100.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
 
   tags = {
     Name = "subnet-${var.workload}-priv1"
@@ -47,7 +49,6 @@ resource "aws_route_table_association" "private1" {
 }
 
 ### Public Subnet ###
-
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -62,12 +63,10 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_subnet" "public1" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = var.az
-
-  # CKV_AWS_130
-  map_public_ip_on_launch = true
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
 
   tags = {
     Name = "subnet-${var.workload}-pub1"

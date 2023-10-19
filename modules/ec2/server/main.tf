@@ -11,7 +11,6 @@ resource "aws_instance" "server" {
   subnet_id                   = var.subnet
   vpc_security_group_ids      = [aws_security_group.server.id]
 
-  availability_zone    = var.az
   iam_instance_profile = aws_iam_instance_profile.main.id
   user_data            = file("${path.module}/userdata.sh")
 
@@ -105,77 +104,4 @@ resource "aws_security_group_rule" "egress_internet" {
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = []
   security_group_id = aws_security_group.server.id
-}
-
-### VPC Endpoints for Session Manager ###
-
-# https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-create-vpc.html
-# https://repost.aws/knowledge-center/ec2-systems-manager-vpc-endpoints
-
-resource "aws_vpc_endpoint" "ssm" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ssm"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
-
-  subnet_ids = [var.subnet]
-
-  ip_address_type = "ipv4"
-
-  security_group_ids = [
-    aws_security_group.server.id,
-  ]
-
-  private_dns_enabled = true
-}
-
-resource "aws_vpc_endpoint" "ec2messages" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ec2messages"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
-
-  subnet_ids = [var.subnet]
-
-  ip_address_type = "ipv4"
-
-  security_group_ids = [
-    aws_security_group.server.id,
-  ]
-
-  private_dns_enabled = true
-}
-
-resource "aws_vpc_endpoint" "ec2" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ec2"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
-
-  subnet_ids = [var.subnet]
-
-  ip_address_type = "ipv4"
-
-  security_group_ids = [
-    aws_security_group.server.id,
-  ]
-
-  private_dns_enabled = true
-}
-
-resource "aws_vpc_endpoint" "ssmmessages" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ssmmessages"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
-
-  subnet_ids = [var.subnet]
-
-  ip_address_type = "ipv4"
-
-  security_group_ids = [
-    aws_security_group.server.id,
-  ]
-
-  private_dns_enabled = true
 }

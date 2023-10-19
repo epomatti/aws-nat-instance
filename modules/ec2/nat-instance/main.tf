@@ -11,7 +11,6 @@ resource "aws_instance" "nat_instance" {
   subnet_id                   = var.subnet
   vpc_security_group_ids      = [aws_security_group.nat_instance.id]
 
-  availability_zone    = var.az
   iam_instance_profile = aws_iam_instance_profile.nat_instance.id
   user_data            = file("${path.module}/userdata.sh")
 
