@@ -3,6 +3,17 @@ resource "aws_iam_instance_profile" "nat_instance" {
   role = aws_iam_role.nat_instance.id
 }
 
+resource "aws_eip" "default" {
+  instance = aws_instance.nat_instance.id
+  domain   = "vpc"
+
+  associate_with_private_ip = aws_instance.nat_instance.private_ip
+
+  tags = {
+    Name = "nat-${var.workload}"
+  }
+}
+
 resource "aws_instance" "nat_instance" {
   ami           = "ami-05983a09f7dc1c18f"
   instance_type = "t4g.nano"
