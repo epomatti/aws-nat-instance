@@ -4,6 +4,20 @@ Ubuntu NAT instance running on AWS.
 
 <img src=".assets/aws-nat2.png" />
 
+Create the `.auto.tfvars` with the following:
+
+```terraform
+create_private_server = false
+create_vpc_endpoints  = false
+```
+
+Apply your infrastructure:
+
+```sh
+terraform init
+terraform apply -auto-approve
+```
+
 After creating the resources, confirm that the NAT instance has been set up correctly:
 
 ```sh

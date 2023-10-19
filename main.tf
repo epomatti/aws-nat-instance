@@ -25,6 +25,7 @@ module "nat-instance" {
 }
 
 module "server" {
+  count                    = var.create_private_server == true ? 1 : 0
   source                   = "./modules/ec2/server"
   workload                 = var.workload
   vpc_id                   = module.vpc.vpc_id
