@@ -2,7 +2,7 @@
 
 Ubuntu NAT instance running on AWS.
 
-<img src=".assets/aws-nat.png" />
+<img src=".assets/aws-nat2.png" />
 
 After creating the resources, confirm that the NAT instance has been set up correctly:
 
