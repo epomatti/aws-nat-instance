@@ -7,7 +7,7 @@ resource "aws_instance" "server" {
   ami           = "ami-05983a09f7dc1c18f"
   instance_type = "t4g.nano"
 
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   subnet_id                   = var.subnet
   vpc_security_group_ids      = [aws_security_group.server.id]
 
