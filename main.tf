@@ -42,5 +42,5 @@ module "vpc_endpoints" {
   vpc_id            = module.vpc.vpc_id
   subnet            = module.vpc.subnet_private1_id
   region            = var.region
-  security_group_id = module.server.security_group_id
+  security_group_id = module.server[0].security_group_id
 }

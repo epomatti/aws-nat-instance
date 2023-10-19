@@ -27,6 +27,8 @@ ip link show
 sysctl -ar ip_forward
 ```
 
+Now set `create_private_server = true` and apply again.
+
 To test it, connect to the private server using Sessions Manager.
 
 If you wish to enable VPC endpoints, set the variable:
