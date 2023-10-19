@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-su ec2-user
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-sudo apt update
-sudo apt upgrade -y
+apt update
+apt upgrade -y
 
-sudo apt -y install telnet
+apt -y install telnet
+
+
+reboot
