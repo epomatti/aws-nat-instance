@@ -15,7 +15,7 @@ sysctl -p
 
 apt install -y iptables-persistent
 iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
-iptables-save
+iptables-save  > /etc/iptables/rules.v4
 
 
 reboot
