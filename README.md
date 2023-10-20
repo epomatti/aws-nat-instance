@@ -38,3 +38,7 @@ If you wish to enable VPC endpoints, set the variable:
 ```terraform
 create_vpc_endpoints = true
 ```
+
+Useful article: [link][1].
+
+[1]: https://linuxhint.com/configure-nat-on-ubuntu/
