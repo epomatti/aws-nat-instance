@@ -39,6 +39,7 @@ If you wish to enable VPC endpoints, set the variable:
 create_vpc_endpoints = true
 ```
 
-Useful article: [link][1].
+Useful articles [here][1] and [here][2].
 
 [1]: https://linuxhint.com/configure-nat-on-ubuntu/
+[2]: https://linuxconfig.org/how-to-make-iptables-rules-persistent-after-reboot-on-linux
