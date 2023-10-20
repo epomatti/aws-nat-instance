@@ -6,7 +6,7 @@ export NEEDRESTART_MODE=a
 apt update
 apt upgrade -y
 
-apt -y install telnet
+apt install -y telnet
 
 
 reboot
