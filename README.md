@@ -2,6 +2,8 @@
 
 Ubuntu NAT instance running on AWS.
 
+> ⚠️ Session Manager is not connecting via current NAT config, need to fix this here.
+
 <img src=".assets/aws-nat2.png" />
 
 Create the `.auto.tfvars` with the following:
