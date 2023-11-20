@@ -1,8 +1,6 @@
 # AWS NAT Instance
 
-Ubuntu NAT instance running on AWS.
-
-> ⚠️ Session Manager is not connecting via current NAT config, need to fix this here.
+Debian NAT instance running on AWS.
 
 <img src=".assets/aws-nat2.png" />
 
@@ -17,15 +15,6 @@ ami           = "ami-0c758b376a9cf7862"
 # Server
 create_private_server = true
 create_vpc_endpoints  = false
-```
-
-To use another distro like Ubuntu, change the variables:
-
-```terraform
-# NAT instance
-instance_type = "t4g.nano"
-userdata      = "ubuntu.sh"
-ami           = "ami-05983a09f7dc1c18f"
 ```
 
 Apply your infrastructure:
@@ -54,7 +43,17 @@ If you wish to enable VPC endpoints, set the variable:
 create_vpc_endpoints = true
 ```
 
+To use another distro like Ubuntu, change the variables:
+
+```terraform
+# NAT instance
+instance_type = "t4g.nano"
+userdata      = "ubuntu.sh"
+ami           = "ami-05983a09f7dc1c18f"
+```
+
 Useful articles [here][1] and [here][2].
+
 
 [1]: https://linuxhint.com/configure-nat-on-ubuntu/
 [2]: https://linuxconfig.org/how-to-make-iptables-rules-persistent-after-reboot-on-linux
