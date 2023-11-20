@@ -20,8 +20,8 @@ resource "aws_instance" "server" {
     http_tokens   = "required"
   }
 
-  monitoring    = false
-  ebs_optimized = false
+  monitoring    = true
+  ebs_optimized = true
 
   root_block_device {
     encrypted   = true

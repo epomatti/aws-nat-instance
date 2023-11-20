@@ -6,6 +6,15 @@ export NEEDRESTART_MODE=a
 apt update
 apt upgrade -y
 
+# SSM Agent
+region=us-east-2
+
+mkdir /tmp/ssm
+cd /tmp/ssm
+wget https://s3.$region.amazonaws.com/amazon-ssm-$region/latest/debian_arm64/amazon-ssm-agent.deb
+dpkg -i amazon-ssm-agent.deb
+systemctl status amazon-ssm-agent
+
 # NAT - https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
 sysctl -w net.ipv4.ip_forward=1
 
