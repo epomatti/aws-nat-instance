@@ -9,8 +9,23 @@ Ubuntu NAT instance running on AWS.
 Create the `.auto.tfvars` with the following:
 
 ```terraform
-create_private_server = false
+# NAT instance
+instance_type = "t4g.nano"
+userdata      = "debian.sh"
+ami           = "ami-0c758b376a9cf7862"
+
+# Server
+create_private_server = true
 create_vpc_endpoints  = false
+```
+
+To use another distro like Ubuntu, change the variables:
+
+```terraform
+# NAT instance
+instance_type = "t4g.nano"
+userdata      = "ubuntu.sh"
+ami           = "ami-05983a09f7dc1c18f"
 ```
 
 Apply your infrastructure:

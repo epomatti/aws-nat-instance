@@ -8,9 +8,21 @@ variable "workload" {
   default = "corp"
 }
 
+variable "instance_type" {
+  type = string
+}
+
+variable "userdata" {
+  type = string
+}
+
+variable "ami" {
+  type = string
+}
+
 variable "create_private_server" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "create_vpc_endpoints" {

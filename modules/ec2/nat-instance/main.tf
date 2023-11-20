@@ -15,15 +15,15 @@ resource "aws_eip" "default" {
 }
 
 resource "aws_instance" "nat_instance" {
-  ami           = "ami-05983a09f7dc1c18f"
-  instance_type = "t4g.nano"
+  ami           = var.ami
+  instance_type = var.instance_type
 
   associate_public_ip_address = true
   subnet_id                   = var.subnet
   vpc_security_group_ids      = [aws_security_group.nat_instance.id]
 
   iam_instance_profile = aws_iam_instance_profile.nat_instance.id
-  user_data            = file("${path.module}/userdata.sh")
+  user_data            = file("${path.module}/userdata/${var.userdata}")
 
   # Requirement for NAT
   source_dest_check = false
@@ -33,8 +33,8 @@ resource "aws_instance" "nat_instance" {
     http_tokens   = "required"
   }
 
-  monitoring    = false
-  ebs_optimized = false
+  monitoring    = true
+  ebs_optimized = true
 
   root_block_device {
     encrypted   = true
@@ -96,22 +96,38 @@ data "aws_vpc" "selected" {
   id = var.vpc_id
 }
 
-resource "aws_security_group_rule" "ingress_ssh" {
+resource "aws_security_group_rule" "ingress_http" {
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  ipv6_cidr_blocks  = []
   security_group_id = aws_security_group.nat_instance.id
 }
 
-resource "aws_security_group_rule" "egress_internet" {
+resource "aws_security_group_rule" "ingress_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  security_group_id = aws_security_group.nat_instance.id
+}
+
+resource "aws_security_group_rule" "egress_http" {
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "TCP"
   cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = []
+  security_group_id = aws_security_group.nat_instance.id
+}
+
+resource "aws_security_group_rule" "egress_https" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.nat_instance.id
 }

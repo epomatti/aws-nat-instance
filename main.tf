@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.22.0"
+      version = "5.26.0"
     }
   }
 }
@@ -18,10 +18,13 @@ module "vpc" {
 }
 
 module "nat-instance" {
-  source   = "./modules/ec2/nat-instance"
-  workload = var.workload
-  vpc_id   = module.vpc.vpc_id
-  subnet   = module.vpc.subnet_public1_id
+  source        = "./modules/ec2/nat-instance"
+  workload      = var.workload
+  vpc_id        = module.vpc.vpc_id
+  subnet        = module.vpc.subnet_public1_id
+  instance_type = var.instance_type
+  ami           = var.ami
+  userdata      = var.userdata
 }
 
 module "server" {
