@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.26.0"
+      version = "5.34.0"
     }
   }
 }
@@ -25,6 +25,15 @@ module "nat-instance" {
   instance_type = var.instance_type
   ami           = var.ami
   userdata      = var.userdata
+}
+
+module "cohesive_vns3" {
+  source        = "./modules/vns3-nate"
+  workload      = var.workload
+  vpc_id        = module.vpc.vpc_id
+  subnet        = module.vpc.subnet_public1_id
+  instance_type = var.cohesive_instance_type
+  ami           = var.cohesive_ami
 }
 
 module "server" {

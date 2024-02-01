@@ -28,3 +28,16 @@ variable "create_vpc_endpoints" {
   type    = bool
   default = false
 }
+
+### Cohesive ###
+variable "create_cohesive_nat" {
+  type = bool
+}
+
+variable "cohesive_instance_type" {
+  type = string
+}
+
+variable "cohesive_ami" {
+  type = string
+}
