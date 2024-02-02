@@ -7,6 +7,11 @@ variable "workload" {
   default = "corp"
 }
 
+### NAT Instance ###
+variable "create_nat_instance" {
+  type = bool
+}
+
 variable "instance_type" {
   type = string
 }

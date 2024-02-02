@@ -56,9 +56,21 @@ Useful articles [here][1] and [here][2].
 
 ## Cohesive Networks
 
+```sh
+mkdir keys
+ssh-keygen -f keys/vns3
+```
+
+
+https://docs.cohesive.net/docs/nate/
+
+https://aws.amazon.com/marketplace/pp/prodview-wf7yma4f6mdw4
+https://aws.amazon.com/marketplace/pp/prodview-beu27g23xt4ok
+
 https://docs.cohesive.net/tutorials/getting-started/
 https://docs.cohesive.net/docs/cloud-setup/aws/
 
+https://docs.cohesive.net/docs/vns3/aws-features/
 
 [1]: https://linuxhint.com/configure-nat-on-ubuntu/
 [2]: https://linuxconfig.org/how-to-make-iptables-rules-persistent-after-reboot-on-linux

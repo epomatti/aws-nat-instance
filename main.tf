@@ -18,6 +18,7 @@ module "vpc" {
 }
 
 module "nat-instance" {
+  count         = var.create_nat_instance == true ? 1 : 0
   source        = "./modules/ec2/nat-instance"
   workload      = var.workload
   vpc_id        = module.vpc.vpc_id
@@ -28,6 +29,7 @@ module "nat-instance" {
 }
 
 module "cohesive_vns3" {
+  count         = var.create_cohesive_nat == true ? 1 : 0
   source        = "./modules/vns3-nate"
   workload      = var.workload
   vpc_id        = module.vpc.vpc_id
@@ -44,7 +46,7 @@ module "server" {
   subnet                   = module.vpc.subnet_private1_id
   region                   = var.region
   route_table_id           = module.vpc.private_route_table_id
-  nat_network_interface_id = module.nat-instance.network_interface_id
+  nat_network_interface_id = module.nat-instance[0].network_interface_id
 }
 
 module "vpc_endpoints" {

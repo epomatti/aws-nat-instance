@@ -2,6 +2,19 @@ locals {
   name = "cohesive"
 }
 
+resource "aws_eip" "default" {
+  domain = "vpc"
+
+  tags = {
+    Name = "vns3-elastic-ip"
+  }
+}
+
+resource "aws_key_pair" "vns3" {
+  key_name   = "vns3-key"
+  public_key = file("${path.module}/../../keys/vns3.pub")
+}
+
 resource "aws_iam_instance_profile" "nat_instance" {
   name = "${var.workload}-${local.name}"
   role = aws_iam_role.nat_instance.id
@@ -16,6 +29,7 @@ resource "aws_instance" "nat_instance" {
   vpc_security_group_ids      = [aws_security_group.nat_instance.id]
 
   iam_instance_profile = aws_iam_instance_profile.nat_instance.id
+  key_name             = aws_key_pair.vns3.key_name
 
   # Requirement for NAT
   source_dest_check = false
@@ -101,7 +115,16 @@ resource "aws_security_group_rule" "ingress_https" {
   security_group_id = aws_security_group.nat_instance.id
 }
 
-resource "aws_security_group_rule" "cohesive" {
+resource "aws_security_group_rule" "cohesive_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.nat_instance.id
+}
+
+resource "aws_security_group_rule" "cohesive_webui" {
   type              = "ingress"
   from_port         = 8000
   to_port           = 8000
@@ -110,20 +133,29 @@ resource "aws_security_group_rule" "cohesive" {
   security_group_id = aws_security_group.nat_instance.id
 }
 
-resource "aws_security_group_rule" "egress_http" {
+resource "aws_security_group_rule" "egress_all" {
   type              = "egress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "TCP"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.nat_instance.id
 }
 
-resource "aws_security_group_rule" "egress_https" {
-  type              = "egress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "TCP"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nat_instance.id
-}
+# resource "aws_security_group_rule" "egress_http" {
+#   type              = "egress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "TCP"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.nat_instance.id
+# }
+
+# resource "aws_security_group_rule" "egress_https" {
+#   type              = "egress"
+#   from_port         = 443
+#   to_port           = 443
+#   protocol          = "TCP"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.nat_instance.id
+# }
