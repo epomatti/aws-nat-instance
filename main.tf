@@ -51,13 +51,12 @@ module "server" {
 }
 
 module "vpc_endpoints" {
-  count             = var.create_vpc_endpoints == true ? 1 : 0
-  source            = "./modules/endpoints"
-  workload          = var.workload
-  vpc_id            = module.vpc.vpc_id
-  subnet            = module.vpc.subnet_private1_id
-  region            = var.region
-  security_group_id = module.server[0].security_group_id
+  count      = var.create_vpc_endpoints == true ? 1 : 0
+  source     = "./modules/endpoints"
+  workload   = var.workload
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = [module.vpc.subnet_private1_id, module.vpc.subnet_public1_id]
+  region     = var.region
 }
 
 module "vpc_block_public_access" {

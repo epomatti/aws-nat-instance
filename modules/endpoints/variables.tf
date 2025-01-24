@@ -2,8 +2,8 @@ variable "workload" {
   type = string
 }
 
-variable "subnet" {
-  type = string
+variable "subnet_ids" {
+  type = list(string)
 }
 
 variable "vpc_id" {
@@ -11,9 +11,5 @@ variable "vpc_id" {
 }
 
 variable "region" {
-  type = string
-}
-
-variable "security_group_id" {
   type = string
 }
