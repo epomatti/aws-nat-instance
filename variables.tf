@@ -60,6 +60,12 @@ variable "cohesive_ami" {
 }
 
 ### Block Public Access ###
-variable "apply_bpc_bpa" {
+variable "apply_vpc_bpa" {
+  type = bool
+}
+variable "create_nat_subnet_exclusion" {
+  type = bool
+}
+variable "create_private_subnet_exclusion" {
   type = bool
 }

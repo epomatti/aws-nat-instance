@@ -76,6 +76,10 @@ resource "aws_iam_role_policy_attachment" "ssm-managed-instance-core" {
   policy_arn = data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn
 }
 
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
 resource "aws_security_group" "server" {
   name        = "ec2-ssm-${var.workload}-server"
   description = "Controls access for EC2 via Session Manager"
@@ -86,22 +90,39 @@ resource "aws_security_group" "server" {
   }
 }
 
-resource "aws_security_group_rule" "ingress_ssh" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+resource "aws_security_group_rule" "egress_http" {
+  type              = "egress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = []
   security_group_id = aws_security_group.server.id
 }
 
-resource "aws_security_group_rule" "egress_internet" {
+resource "aws_security_group_rule" "egress_https" {
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = []
+  security_group_id = aws_security_group.server.id
+}
+
+### ICMP ###
+resource "aws_security_group_rule" "ingress_icmp" {
+  type              = "ingress"
+  from_port         = -1
+  to_port           = -1
+  protocol          = "icmp"
+  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  security_group_id = aws_security_group.server.id
+}
+
+resource "aws_security_group_rule" "egress_icmp" {
+  type              = "egress"
+  from_port         = -1
+  to_port           = -1
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.server.id
 }

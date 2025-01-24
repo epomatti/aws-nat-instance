@@ -9,26 +9,45 @@ locals {
     "ssm",
     "ec2messages",
     "ec2",
-    "ssmmessages"
+    "ssmmessages",
+    "s3"
   ]
 }
 
-resource "aws_vpc_endpoint" "endpoints_nat_subnet" {
-  for_each          = toset(local.services)
+# TODO: Confirm subnet and route table associations
+resource "aws_vpc_endpoint" "s3_gateway" {
   vpc_id            = var.vpc_id
-  service_name      = "${local.service_name_prefix}${each.key}"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
 
-  subnet_ids = [var.vpc_endpoints_subnet_id]
+  # auto_accept       = true
 
-  ip_address_type = "ipv4"
+  # subnet_ids = [var.vpc_endpoints_subnet_id]
+
+  # ip_address_type = "ipv4"
+
+  # security_group_ids = [
+  #   aws_security_group.default.id
+  # ]
+
+  # private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "endpoints_nat_subnet" {
+  for_each            = toset(local.services)
+  vpc_id              = var.vpc_id
+  service_name        = "${local.service_name_prefix}${each.key}"
+  vpc_endpoint_type   = "Interface"
+  auto_accept         = true
+  private_dns_enabled = true
+  ip_address_type     = "ipv4"
+  subnet_ids          = [var.vpc_endpoints_subnet_id]
 
   security_group_ids = [
     aws_security_group.default.id
   ]
 
-  private_dns_enabled = true
+  depends_on = [aws_vpc_endpoint.s3_gateway]
 }
 
 # resource "aws_vpc_endpoint" "ssm" {

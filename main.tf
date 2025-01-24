@@ -60,8 +60,11 @@ module "vpc_endpoints" {
 }
 
 module "vpc_block_public_access" {
-  count  = var.apply_bpc_bpa == true ? 1 : 0
+  count  = var.apply_vpc_bpa == true ? 1 : 0
   source = "./modules/vpc-bpa"
+
+  create_nat_subnet_exclusion     = var.create_nat_subnet_exclusion
+  create_private_subnet_exclusion = var.create_private_subnet_exclusion
 
   vpc_internet_gateway_block_mode                    = var.vpc_internet_gateway_block_mode
   vpc_nat_subnet_internet_gateway_exclusion_mode     = var.vpc_nat_subnet_internet_gateway_exclusion_mode

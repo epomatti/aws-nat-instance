@@ -4,6 +4,7 @@ resource "aws_vpc_block_public_access_options" "default" {
 }
 
 resource "aws_vpc_block_public_access_exclusion" "nat_subnet" {
+  count                           = var.create_nat_subnet_exclusion == true ? 1 : 0
   subnet_id                       = var.nat_subnet_id
   internet_gateway_exclusion_mode = var.vpc_nat_subnet_internet_gateway_exclusion_mode
 
@@ -13,6 +14,7 @@ resource "aws_vpc_block_public_access_exclusion" "nat_subnet" {
 }
 
 resource "aws_vpc_block_public_access_exclusion" "private_subnet" {
+  count                           = var.create_private_subnet_exclusion == true ? 1 : 0
   subnet_id                       = var.private_subnet_id
   internet_gateway_exclusion_mode = var.vpc_private_subnet_internet_gateway_exclusion_mode
 

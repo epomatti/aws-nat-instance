@@ -17,3 +17,10 @@ variable "nat_subnet_id" {
 variable "private_subnet_id" {
   type = string
 }
+
+variable "create_nat_subnet_exclusion" {
+  type = bool
+}
+variable "create_private_subnet_exclusion" {
+  type = bool
+}
