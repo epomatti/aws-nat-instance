@@ -21,3 +21,7 @@ variable "route_table_id" {
 variable "nat_network_interface_id" {
   type = string
 }
+
+variable "ami" {
+  type = string
+}

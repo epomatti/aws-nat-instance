@@ -4,7 +4,7 @@ resource "aws_iam_instance_profile" "main" {
 }
 
 resource "aws_instance" "server" {
-  ami           = "ami-05983a09f7dc1c18f"
+  ami           = var.ami
   instance_type = "t4g.nano"
 
   associate_public_ip_address = false
@@ -12,7 +12,7 @@ resource "aws_instance" "server" {
   vpc_security_group_ids      = [aws_security_group.server.id]
 
   iam_instance_profile = aws_iam_instance_profile.main.id
-  user_data            = file("${path.module}/userdata.sh")
+  user_data            = file("${path.module}/userdata/ubuntu.sh")
 
   # Enables metadata V2
   metadata_options {

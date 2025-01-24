@@ -34,6 +34,18 @@ variable "create_vpc_endpoints" {
   default = false
 }
 
+variable "vpc_internet_gateway_block_mode" {
+  type = string
+}
+
+variable "vpc_nat_subnet_internet_gateway_exclusion_mode" {
+  type = string
+}
+
+variable "vpc_private_subnet_internet_gateway_exclusion_mode" {
+  type = string
+}
+
 ### Cohesive ###
 variable "create_cohesive_nat" {
   type = bool
@@ -45,4 +57,9 @@ variable "cohesive_instance_type" {
 
 variable "cohesive_ami" {
   type = string
+}
+
+### Block Public Access ###
+variable "apply_bpc_bpa" {
+  type = bool
 }

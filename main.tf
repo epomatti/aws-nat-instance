@@ -47,6 +47,7 @@ module "server" {
   region                   = var.region
   route_table_id           = module.vpc.private_route_table_id
   nat_network_interface_id = module.nat-instance[0].network_interface_id
+  ami                      = var.ami
 }
 
 module "vpc_endpoints" {
@@ -57,4 +58,16 @@ module "vpc_endpoints" {
   subnet            = module.vpc.subnet_private1_id
   region            = var.region
   security_group_id = module.server[0].security_group_id
+}
+
+module "vpc_block_public_access" {
+  count  = var.apply_bpc_bpa == true ? 1 : 0
+  source = "./modules/vpc-bpa"
+
+  vpc_internet_gateway_block_mode                    = var.vpc_internet_gateway_block_mode
+  vpc_nat_subnet_internet_gateway_exclusion_mode     = var.vpc_nat_subnet_internet_gateway_exclusion_mode
+  vpc_private_subnet_internet_gateway_exclusion_mode = var.vpc_private_subnet_internet_gateway_exclusion_mode
+
+  nat_subnet_id     = module.vpc.subnet_public1_id
+  private_subnet_id = module.vpc.subnet_private1_id
 }
