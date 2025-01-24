@@ -46,7 +46,7 @@ module "server" {
   subnet                   = module.vpc.subnet_private1_id
   region                   = var.region
   route_table_id           = module.vpc.private_route_table_id
-  nat_network_interface_id = module.nat-instance[0].network_interface_id
+  nat_network_interface_id = var.create_nat_gateway ? module.nat-gateway[0].network_interface_id : module.nat-instance[0].network_interface_id
   ami                      = var.ami
 }
 
@@ -72,4 +72,11 @@ module "vpc_block_public_access" {
 
   nat_subnet_id     = module.vpc.subnet_public1_id
   private_subnet_id = module.vpc.subnet_private1_id
+}
+
+module "nat-gateway" {
+  count            = var.create_nat_gateway == true ? 1 : 0
+  source           = "./modules/nat-gateway"
+  workload         = var.workload
+  public_subnet_id = module.vpc.subnet_public1_id
 }

@@ -69,3 +69,8 @@ variable "create_nat_subnet_exclusion" {
 variable "create_private_subnet_exclusion" {
   type = bool
 }
+
+### NAT Gateway ###
+variable "create_nat_gateway" {
+  type = bool
+}
