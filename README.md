@@ -4,17 +4,16 @@ Debian NAT instance running on AWS.
 
 <img src=".assets/aws-nat2.png" />
 
-Create the `.auto.tfvars` with the following:
+Copy the variables template:
 
-```terraform
-# NAT instance
-instance_type = "t4g.nano"
-userdata      = "debian.sh"
-ami           = "ami-0c758b376a9cf7862"
+```sh
+cp config/template.tfvars .auto.tfvars
+```
 
-# Server
-create_private_server = true
-create_vpc_endpoints  = false
+Generate the key pair:
+
+```sh
+mkdir keys && ssh-keygen -f keys/vns3
 ```
 
 Apply your infrastructure:
@@ -43,7 +42,7 @@ If you wish to enable VPC endpoints, set the variable:
 create_vpc_endpoints = true
 ```
 
-To use another distro like Ubuntu, change the variables:
+To use another distribution like Ubuntu, change the variables:
 
 ```terraform
 # NAT instance

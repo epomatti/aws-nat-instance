@@ -2,10 +2,10 @@
 region = "us-east-2"
 
 # NAT instance
-create_nat_instance = false
-instance_type       = "t4g.nano"
-userdata            = "debian.sh"
-ami                 = "ami-0c758b376a9cf7862"
+create_nat_instance = true
+instance_type       = "t4g.micro"
+userdata            = "ubuntu.sh"
+ami                 = "ami-0ac5d9e789dbb455a"
 
 # Cohesive VNS3 NATe
 create_cohesive_nat    = false
