@@ -8,10 +8,12 @@ userdata            = "ubuntu.sh"
 ami                 = "ami-0ac5d9e789dbb455a"
 
 # VPC
-apply_bpc_bpa                                      = false
-vpc_internet_gateway_block_mode                    = "off" # "block-bidirectional", "block-ingress", "off"
-vpc_nat_subnet_internet_gateway_exclusion_mode     = "allow-bidirectional"
-vpc_private_subnet_internet_gateway_exclusion_mode = "allow-bidirectional"
+apply_bpc_bpa = true
+# create_nat_subnet_exclusion                        = false
+# create_private_subnet_exclusion                        = false
+vpc_internet_gateway_block_mode                    = "block-bidirectional" # "block-bidirectional", "block-ingress", "off"
+vpc_nat_subnet_internet_gateway_exclusion_mode     = "allow-bidirectional" # "allow-bidirectional", "allow-egress"
+vpc_private_subnet_internet_gateway_exclusion_mode = "allow-egress"        # "allow-bidirectional", "allow-egress"
 
 # Cohesive VNS3 NATe
 create_cohesive_nat    = false

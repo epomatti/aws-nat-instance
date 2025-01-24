@@ -77,3 +77,27 @@ resource "aws_route_table_association" "public1" {
   subnet_id      = aws_subnet.public1.id
   route_table_id = aws_route_table.public.id
 }
+
+### Private Subnet ###
+resource "aws_route_table" "vpc_endpoints" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "rt-${var.workload}-vpce"
+  }
+}
+
+resource "aws_subnet" "vpc_endpoints" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.188.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "subnet-${var.workload}-vpce"
+  }
+}
+
+resource "aws_route_table_association" "vpc_endpoints" {
+  subnet_id      = aws_subnet.vpc_endpoints.id
+  route_table_id = aws_route_table.vpc_endpoints.id
+}

@@ -3,13 +3,24 @@
 # https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-create-vpc.html
 # https://repost.aws/knowledge-center/ec2-systems-manager-vpc-endpoints
 
-resource "aws_vpc_endpoint" "ssm" {
+locals {
+  service_name_prefix = "com.amazonaws.${var.region}."
+  services = [
+    "ssm",
+    "ec2messages",
+    "ec2",
+    "ssmmessages"
+  ]
+}
+
+resource "aws_vpc_endpoint" "endpoints_nat_subnet" {
+  for_each          = toset(local.services)
   vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ssm"
+  service_name      = "${local.service_name_prefix}${each.key}"
   vpc_endpoint_type = "Interface"
   auto_accept       = true
 
-  subnet_ids = var.subnet_ids
+  subnet_ids = [var.vpc_endpoints_subnet_id]
 
   ip_address_type = "ipv4"
 
@@ -20,56 +31,73 @@ resource "aws_vpc_endpoint" "ssm" {
   private_dns_enabled = true
 }
 
-resource "aws_vpc_endpoint" "ec2messages" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ec2messages"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
+# resource "aws_vpc_endpoint" "ssm" {
+#   vpc_id            = var.vpc_id
+#   service_name      = "com.amazonaws.${var.region}.ssm"
+#   vpc_endpoint_type = "Interface"
+#   auto_accept       = true
 
-  subnet_ids = var.subnet_ids
+#   subnet_ids = var.subnet_ids
 
-  ip_address_type = "ipv4"
+#   ip_address_type = "ipv4"
 
-  security_group_ids = [
-    aws_security_group.default.id
-  ]
+#   security_group_ids = [
+#     aws_security_group.default.id
+#   ]
 
-  private_dns_enabled = true
-}
+#   private_dns_enabled = true
+# }
 
-resource "aws_vpc_endpoint" "ec2" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ec2"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
+# resource "aws_vpc_endpoint" "ec2messages" {
+#   vpc_id            = var.vpc_id
+#   service_name      = "com.amazonaws.${var.region}.ec2messages"
+#   vpc_endpoint_type = "Interface"
+#   auto_accept       = true
 
-  subnet_ids = var.subnet_ids
+#   subnet_ids = var.subnet_ids
 
-  ip_address_type = "ipv4"
+#   ip_address_type = "ipv4"
 
-  security_group_ids = [
-    aws_security_group.default.id
-  ]
+#   security_group_ids = [
+#     aws_security_group.default.id
+#   ]
 
-  private_dns_enabled = true
-}
+#   private_dns_enabled = true
+# }
 
-resource "aws_vpc_endpoint" "ssmmessages" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.ssmmessages"
-  vpc_endpoint_type = "Interface"
-  auto_accept       = true
+# resource "aws_vpc_endpoint" "ec2" {
+#   vpc_id            = var.vpc_id
+#   service_name      = "com.amazonaws.${var.region}.ec2"
+#   vpc_endpoint_type = "Interface"
+#   auto_accept       = true
 
-  subnet_ids = var.subnet_ids
+#   subnet_ids = var.subnet_ids
 
-  ip_address_type = "ipv4"
+#   ip_address_type = "ipv4"
 
-  security_group_ids = [
-    aws_security_group.default.id
-  ]
+#   security_group_ids = [
+#     aws_security_group.default.id
+#   ]
 
-  private_dns_enabled = true
-}
+#   private_dns_enabled = true
+# }
+
+# resource "aws_vpc_endpoint" "ssmmessages" {
+#   vpc_id            = var.vpc_id
+#   service_name      = "com.amazonaws.${var.region}.ssmmessages"
+#   vpc_endpoint_type = "Interface"
+#   auto_accept       = true
+
+#   subnet_ids = var.subnet_ids
+
+#   ip_address_type = "ipv4"
+
+#   security_group_ids = [
+#     aws_security_group.default.id
+#   ]
+
+#   private_dns_enabled = true
+# }
 
 data "aws_vpc" "selected" {
   id = var.vpc_id
