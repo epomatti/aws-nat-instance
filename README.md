@@ -10,6 +10,12 @@ Copy the variables template:
 cp config/template.tfvars .auto.tfvars
 ```
 
+Create the optional key for NATe:
+
+```sh
+mkdir keys && ssh-keygen -f keys/vns3
+```
+
 Apply your infrastructure:
 
 ```sh
@@ -99,10 +105,6 @@ terraform apply -auto-approve
 ## VNS3
 
 Another option is to use Cohesive Networks VNS3 NATe:
-
-```sh
-mkdir keys && ssh-keygen -f keys/vns3
-```
 
 > [!TIP]
 > Always check for an updated AMI
