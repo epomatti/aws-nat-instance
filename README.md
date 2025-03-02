@@ -100,7 +100,37 @@ terraform init
 terraform apply -auto-approve
 ```
 
+Connect to the instance and confirm that an Ubuntu Pro AMI has been selected:
 
+```sh
+pro status --all
+```
+
+Follow the [installation](https://ubuntu.com/security/certifications/docs/disa-stig/installation) process:
+
+```sh
+sudo apt update
+sudo apt install -y ubuntu-advantage-tools
+sudo pro enable usg
+sudo apt install -y usg
+```
+
+Generate the tailoring file:
+
+> [!TIP]
+> An example file is available in the `examples/` directory:
+
+```sh
+sudo usg generate-tailoring cis_level1_server tailor.xml
+```
+
+The following rules must be disabled with `selected = false`
+
+- 3.2.2 Ensure IP forwarding is disabled (Automated)
+
+```sh
+sudo usg fix --tailoring-file tailor.xml
+```
 
 ## VNS3
 
