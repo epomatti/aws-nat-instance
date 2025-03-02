@@ -41,14 +41,28 @@ To use another distribution like Ubuntu, change the variables:
 
 ```terraform
 # NAT instance
-instance_type = "t4g.nano"
+instance_type = "t4g.micro"
 userdata      = "ubuntu.sh"
 ami           = "ami-05983a09f7dc1c18f"
 ```
 
 Useful articles [here][1] and [here][2].
 
-## Virtual Network
+## VPC Block Private Access
+
+For extra security controls, configure the VPC section of parameters:
+
+> [!IMPORTANT]
+> This feature only fully integrates with NAT Gateway, such as for `allow-egress`. When using NAT instances, `allow-bidirectional` is required.
+
+```terraform
+apply_vpc_bpa                                      = false
+create_nat_subnet_exclusion                        = true
+create_private_subnet_exclusion                    = true
+vpc_internet_gateway_block_mode                    = "block-bidirectional" # "block-bidirectional", "block-ingress", "off"
+vpc_nat_subnet_internet_gateway_exclusion_mode     = "allow-bidirectional" # "allow-bidirectional", "allow-egress"
+vpc_private_subnet_internet_gateway_exclusion_mode = "allow-bidirectional" # "allow-bidirectional", "allow-egress"
+```
 
 ## VNS3
 
