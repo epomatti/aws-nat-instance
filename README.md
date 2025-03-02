@@ -64,6 +64,38 @@ vpc_nat_subnet_internet_gateway_exclusion_mode     = "allow-bidirectional" # "al
 vpc_private_subnet_internet_gateway_exclusion_mode = "allow-bidirectional" # "allow-bidirectional", "allow-egress"
 ```
 
+## Ubuntu Pro USG
+
+When applying Ubuntu Pro hardening with USG, additional configuration is required. The CIS benchmark rules will constraint the NAT instance capabilities.
+
+To setup the environment, first configure the required variables.
+
+Find the [latest](https://documentation.ubuntu.com/aws/en/latest/aws-how-to/instances/find-ubuntu-images/) Ubuntu Pro AMI:
+
+> [!TIP]
+> Right now, USG is not yet available for 24.04
+
+```sh
+aws ssm get-parameters --names \
+   '/aws/service/canonical/ubuntu/pro-server/jammy/stable/current/arm64/hvm/ebs-gp3/ami-id'
+```
+
+Set the variable values:
+
+```terraform
+ami      = "ami-06f50fcd71f272ce1"
+userdata = "ubuntu-pro.sh"
+```
+
+Deploy the resources:
+
+```sh
+terraform init
+terraform apply -auto-approve
+```
+
+
+
 ## VNS3
 
 Another option is to use Cohesive Networks VNS3 NATe:
