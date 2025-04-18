@@ -79,17 +79,18 @@ To setup the environment, first configure the required variables.
 Find the [latest](https://documentation.ubuntu.com/aws/en/latest/aws-how-to/instances/find-ubuntu-images/) Ubuntu Pro AMI:
 
 > [!TIP]
-> Right now, USG is not yet available for 24.04
+> Currently there might be [issues](https://discourse.ubuntu.com/t/cis-compliance-with-usg-for-ubuntu-24-04-lts) with 24.04 LTS.
 
 ```sh
-aws ssm get-parameters --names \
-   '/aws/service/canonical/ubuntu/pro-server/jammy/stable/current/arm64/hvm/ebs-gp3/ami-id'
+# Ubuntu Pro Server 24.04 (Noble) TLS Arm64
+aws ssm get-parameters --region us-east-2 \
+   --names '/aws/service/canonical/ubuntu/pro-server/noble/stable/current/arm64/hvm/ebs-gp3/ami-id'
 ```
 
 Set the variable values:
 
 ```terraform
-ami      = "ami-06f50fcd71f272ce1"
+ami      = "ami-0ffa1a4298cabeb40"
 userdata = "ubuntu-pro.sh"
 ```
 
@@ -100,19 +101,12 @@ terraform init
 terraform apply -auto-approve
 ```
 
-Connect to the instance and confirm that an Ubuntu Pro AMI has been selected:
+The USG [installation](https://ubuntu.com/security/certifications/docs/disa-stig/installation) steps are already implemented in via cloud init.
+
+Connect to the instance and confirm USG is enabled:
 
 ```sh
 pro status --all
-```
-
-Follow the [installation](https://ubuntu.com/security/certifications/docs/disa-stig/installation) process:
-
-```sh
-sudo apt update
-sudo apt install -y ubuntu-advantage-tools
-sudo pro enable usg
-sudo apt install -y usg
 ```
 
 Generate the tailoring file:
@@ -127,10 +121,30 @@ sudo usg generate-tailoring cis_level1_server tailor.xml
 The following rules must be disabled with `selected = false`
 
 - 3.2.2 Ensure IP forwarding is disabled (Automated)
+- 3.5.1.2 Ensure iptables-persistent is not installed with ufw (Automated)
+
+Apply the fix with the tailored configuration:
 
 ```sh
 sudo usg fix --tailoring-file tailor.xml
 ```
+
+Double check the configuration:
+
+```sh
+# IP Forwarding should be enabled
+sysctl -ar ip_forward
+cat /proc/sys/net/ipv4/ip_forward
+
+# UFW should be enabled
+systemctl ufw status
+```
+
+Additional reference documentation:
+
+- [What is masquerade in the context of iptables](https://askubuntu.com/questions/466445/what-is-masquerade-in-the-context-of-iptables)
+- [Disable source routing](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-server_security-disable-source-routing#sect-Security_Guide-Server_Security-Disable-Source-Routing)
+
 
 ## VNS3
 
