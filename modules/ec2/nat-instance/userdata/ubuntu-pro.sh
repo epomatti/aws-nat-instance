@@ -2,5 +2,7 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt update
-apt upgrade -y
+sudo apt update
+sudo apt install -y ubuntu-advantage-tools
+sudo pro enable usg
+sudo apt install -y usg
