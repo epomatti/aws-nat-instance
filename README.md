@@ -85,6 +85,14 @@ Find the [latest](https://documentation.ubuntu.com/aws/en/latest/aws-how-to/inst
 # Ubuntu Pro Server 24.04 (Noble) TLS Arm64
 aws ssm get-parameters --region us-east-2 \
    --names '/aws/service/canonical/ubuntu/pro-server/noble/stable/current/arm64/hvm/ebs-gp3/ami-id'
+
+# Or use the Minimal release
+# Was available only for Jammy and EBS GP2
+aws ssm get-parameters --region us-east-2 \
+   --names '/aws/service/canonical/ubuntu/pro-minimal/jammy/stable/current/arm64/hvm/ebs-gp2/ami-id'
+
+# To search by path
+aws ssm get-parameters-by-path  --region us-east-2 --path '/aws/service/canonical/ubuntu/pro-minimal/' --recursive --output text
 ```
 
 Set the variable values:
@@ -101,6 +109,12 @@ terraform init
 terraform apply -auto-approve
 ```
 
+If you're running a minimal instance, try and check if the packages are < 500;
+
+```sh
+dpkg -l | wc -l
+```
+
 The USG [installation](https://ubuntu.com/security/certifications/docs/disa-stig/installation) steps are already implemented in via cloud init.
 
 Connect to the instance and confirm USG is enabled:
@@ -115,13 +129,34 @@ Generate the tailoring file:
 > An example file is available in the `examples/` directory:
 
 ```sh
+# Select depending on your requirements
 sudo usg generate-tailoring cis_level1_server tailor.xml
+sudo usg generate-tailoring cis_level2_server tailor.xml
 ```
 
-The following rules must be disabled with `selected = false`
+The following rules must be disabled with `selected="false"` to keep NAT operational:
 
-- 3.2.2 Ensure IP forwarding is disabled (Automated)
-- 3.5.1.2 Ensure iptables-persistent is not installed with ufw (Automated)
+```xml
+<!--3.3.1: Ensure ip forwarding is disabled (Automated)-->
+<select idref="xccdf_org.ssgproject.content_rule_sysctl_net_ipv4_ip_forward" selected="false"/>
+<select idref="xccdf_org.ssgproject.content_rule_sysctl_net_ipv6_conf_all_forwarding" selected="false"/>
+
+<!--4.2.2: Ensure iptables-persistent is not installed with ufw (Automated)-->
+<select idref="xccdf_org.ssgproject.content_rule_package_iptables-persistent_removed" selected="false"/>
+
+<!--3.3.8: Ensure source routed packets are not accepted (Automated)-->
+<select idref="xccdf_org.ssgproject.content_rule_sysctl_net_ipv4_conf_default_accept_source_route" selected="false"/>
+```
+
+You may wish to disable AIDE to speed up the tests:
+
+```xml
+<!--6.3.1: Ensure AIDE is installed (Automated)-->
+<select idref="xccdf_org.ssgproject.content_rule_aide_build_database" selected="false"/>
+<select idref="xccdf_org.ssgproject.content_rule_package_aide_installed" selected="false"/>
+<!--6.3.2: Ensure filesystem integrity is regularly checked (Automated)-->
+<select idref="xccdf_org.ssgproject.content_rule_aide_periodic_checking_systemd_timer" selected="false"/>
+```
 
 Apply the fix with the tailored configuration:
 
@@ -135,6 +170,10 @@ Double check the configuration:
 # IP Forwarding should be enabled
 sysctl -ar ip_forward
 cat /proc/sys/net/ipv4/ip_forward
+
+# Source routing
+sysctl -a | grep source_route | grep ipv4
+sysctl -a | grep source_route | grep ipv6
 
 # UFW should be enabled
 systemctl ufw status

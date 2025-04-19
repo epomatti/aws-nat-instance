@@ -81,6 +81,11 @@ module "nat-gateway" {
   public_subnet_id = module.vpc.subnet_public1_id
 }
 
+module "s3" {
+  source = "./modules/s3"
+}
+
 module "ssm" {
-  source = "./modules/ssm"
+  source     = "./modules/ssm"
+  usg_bucket = module.s3.usg_bucket
 }

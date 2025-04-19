@@ -303,7 +303,7 @@
     <!--4.2.1: Ensure ufw is installed (Automated)-->
     <select idref="xccdf_org.ssgproject.content_rule_package_ufw_installed" selected="true"/>
     <!--4.2.2: Ensure iptables-persistent is not installed with ufw (Automated)-->
-    <select idref="xccdf_org.ssgproject.content_rule_package_iptables-persistent_removed" selected="true"/>
+    <select idref="xccdf_org.ssgproject.content_rule_package_iptables-persistent_removed" selected="false"/>
     <!--4.2.3: Ensure ufw service is enabled (Automated)-->
     <select idref="xccdf_org.ssgproject.content_rule_check_ufw_active" selected="true"/>
     <select idref="xccdf_org.ssgproject.content_rule_service_ufw_enabled" selected="true"/>

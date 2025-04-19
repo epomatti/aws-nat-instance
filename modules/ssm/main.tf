@@ -7,3 +7,9 @@ resource "aws_ssm_parameter" "cloudwath_config_file" {
   type  = "String"
   value = local.config_file
 }
+
+resource "aws_ssm_parameter" "usg_bucket" {
+  name  = "usg-bucket"  
+  type  = "String"
+  value = var.usg_bucket
+}
