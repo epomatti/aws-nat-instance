@@ -9,11 +9,11 @@ apt update && apt upgrade -y
 region=us-east-2
 arch=arm64
 distro=ubuntu
-wget "https://amazoncloudwatch-agent-$region.s3.$region.amazonaws.com/$ubuntu/$arch/latest/amazon-cloudwatch-agent.deb"
+wget "https://amazoncloudwatch-agent-$region.s3.$region.amazonaws.com/$distro/$arch/latest/amazon-cloudwatch-agent.deb"
 dpkg -i -E ./amazon-cloudwatch-agent.deb
 
 ssmParameterName=AmazonCloudWatch-linux-terraform
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c "ssm:$ssmParameterName"
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c "ssm:$ssmParameterName"
 
 ### NAT ###
 # https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html
