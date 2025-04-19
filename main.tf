@@ -80,3 +80,7 @@ module "nat-gateway" {
   workload         = var.workload
   public_subnet_id = module.vpc.subnet_public1_id
 }
+
+module "ssm" {
+  source = "./modules/ssm"
+}
