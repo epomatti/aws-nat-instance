@@ -26,6 +26,7 @@ module "nat-instance" {
   instance_type = var.instance_type
   ami           = var.ami
   userdata      = var.userdata
+  create_eip    = var.create_eip
 }
 
 module "cohesive_vns3" {

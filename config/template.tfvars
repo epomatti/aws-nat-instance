@@ -3,6 +3,7 @@ region = "us-east-2"
 
 # NAT instance
 create_nat_instance = true
+create_eip          = true
 instance_type       = "t4g.micro"
 userdata            = "ubuntu.sh"
 ami                 = "ami-0ac5d9e789dbb455a"

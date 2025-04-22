@@ -12,6 +12,10 @@ variable "create_nat_instance" {
   type = bool
 }
 
+variable "create_eip" {
+  type = bool
+}
+
 variable "instance_type" {
   type = string
 }

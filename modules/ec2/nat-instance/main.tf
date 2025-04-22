@@ -4,6 +4,7 @@ resource "aws_iam_instance_profile" "nat_instance" {
 }
 
 resource "aws_eip" "default" {
+  count    = var.create_eip ? 1 : 0
   instance = aws_instance.nat_instance.id
   domain   = "vpc"
 

@@ -21,3 +21,7 @@ variable "instance_type" {
 variable "userdata" {
   type = string
 }
+
+variable "create_eip" {
+  type = bool
+}
