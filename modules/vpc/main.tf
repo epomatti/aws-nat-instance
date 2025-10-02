@@ -1,5 +1,6 @@
 locals {
   az1 = "${var.region}a"
+  az2 = "${var.region}b"
 }
 
 ### VPC ###
@@ -53,7 +54,7 @@ resource "aws_subnet" "private1" {
 resource "aws_subnet" "private2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.101.0/24"
-  availability_zone       = local.az1
+  availability_zone       = local.az2
   map_public_ip_on_launch = false
 
   tags = {
