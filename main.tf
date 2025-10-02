@@ -93,8 +93,9 @@ module "ssm" {
 }
 
 module "iam_lambda" {
-  source   = "./modules/iam/lambda"
-  workload = var.workload
+  source     = "./modules/iam/lambda"
+  workload   = var.workload
+  aws_region = var.region
 }
 
 module "cloudwatch" {
