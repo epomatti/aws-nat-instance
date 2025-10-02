@@ -2,7 +2,11 @@ variable "workload" {
   type = string
 }
 
-variable "subnet" {
+variable "private_subnet1_id" {
+  type = string
+}
+
+variable "private_subnet2_id" {
   type = string
 }
 
@@ -14,7 +18,11 @@ variable "region" {
   type = string
 }
 
-variable "route_table_id" {
+variable "route_table1_id" {
+  type = string
+}
+
+variable "route_table2_id" {
   type = string
 }
 
@@ -27,5 +35,9 @@ variable "ami" {
 }
 
 variable "availability_zone" {
+  type = string
+}
+
+variable "vpc_cidr_block" {
   type = string
 }

@@ -1,7 +1,8 @@
 import json
 import boto3
-import postgresql
+import pg8000.native
 import requests
+# import ssl
 
 
 ssm_client = boto3.client('ssm')
@@ -10,6 +11,17 @@ ssm_prefix = '/litware/lambda/postgresql'
 ssm_postgresql_address = f"{ssm_prefix}/address"
 ssm_postgresql_username = f"{ssm_prefix}/username"
 ssm_postgresql_password = f"{ssm_prefix}/password"
+
+# ca_bundle = "us-east-2-bundle.pem"
+
+# # Create SSL context with your bundle
+# ctx = ssl.create_default_context(
+#     purpose=ssl.Purpose.SERVER_AUTH,
+#     cafile=ca_bundle
+# )
+
+# ctx.check_hostname = False
+# ctx.verify_mode = ssl.CERT_REQUIRED
 
 
 def lambda_handler(event, context):
@@ -30,16 +42,17 @@ def _connect_to_postgresql():
     username = _get_parameter(ssm_postgresql_username)
     password = _get_parameter(ssm_postgresql_password, True)
 
-    db = postgresql.open(f'pq://{username}:{password}@{address}:5432/appdb')
+    conn = pg8000.native.Connection(
+        user=username,
+        password=password,
+        host=address,
+        port=5432,
+        database="appdb",
+        ssl_context=True  # use default SSL context, no cert checks
+    )
 
-    get_table = db.prepare("SELECT * from information_schema.tables WHERE table_name = $1")
-    print(get_table("tables"))
-
-    # Streaming, in a transaction.
-    with db.xact():
-        for x in get_table.rows("tables"):
-            print(x)
-    db.close()
+    print(conn.run("SELECT current_date")[0][0])
+    conn.close()
 
 
 def _make_http_request():

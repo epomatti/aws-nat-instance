@@ -39,7 +39,8 @@ resource "aws_lambda_function" "sqs" {
   lifecycle {
     ignore_changes = [
       filename,
-      source_code_hash
+      source_code_hash,
+      vpc_config,
     ]
   }
 }
@@ -71,3 +72,13 @@ resource "aws_security_group_rule" "egress_https" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.lambda.id
 }
+
+resource "aws_security_group_rule" "egress_postgresql" {
+  type              = "egress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "TCP"
+  cidr_blocks       = [var.vpc_cidr_block]
+  security_group_id = aws_security_group.lambda.id
+}
+
