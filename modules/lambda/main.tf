@@ -2,6 +2,11 @@ locals {
   filename = "${path.module}/handlers/${var.lambda_handler_zip}"
 }
 
+resource "aws_lambda_function_url" "auth_none" {
+  function_name      = aws_lambda_function.sqs.function_name
+  authorization_type = "NONE"
+}
+
 resource "aws_lambda_function" "sqs" {
   function_name                      = var.name
   description                        = "Lambda to test VPC NAT egress"

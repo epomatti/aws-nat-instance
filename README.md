@@ -184,6 +184,28 @@ Additional reference documentation:
 - [What is masquerade in the context of iptables](https://askubuntu.com/questions/466445/what-is-masquerade-in-the-context-of-iptables)
 - [Disable source routing](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-server_security-disable-source-routing#sect-Security_Guide-Server_Security-Disable-Source-Routing)
 
+## Lambda
+
+To test Lambda VNET integration:
+
+```sh
+sam build
+sam local invoke HelloWorldFunction
+```
+
+Update the function code:
+
+```sh
+sam build
+aws lambda update-function-code --function-name litware \
+  --zip-file fileb://myFunction.zip
+```
+
+Invoke remotely:
+
+```sh
+sam remote invoke corp
+```
 
 ## VNS3
 
