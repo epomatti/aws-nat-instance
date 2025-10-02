@@ -2,8 +2,20 @@ output "vpc_id" {
   value = aws_vpc.main.id
 }
 
+output "vpc_cidr_block" {
+  value = aws_vpc.main.cidr_block
+}
+
+output "primary_az" {
+  value = local.az1
+}
+
 output "subnet_private1_id" {
   value = aws_subnet.private1.id
+}
+
+output "subnet_private2_id" {
+  value = aws_subnet.private2.id
 }
 
 output "subnet_public1_id" {

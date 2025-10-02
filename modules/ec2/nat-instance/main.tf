@@ -28,6 +28,7 @@ resource "aws_instance" "nat_instance" {
 
   # Requirement for NAT
   source_dest_check = false
+  availability_zone = var.availability_zone
 
   metadata_options {
     http_endpoint = "enabled"

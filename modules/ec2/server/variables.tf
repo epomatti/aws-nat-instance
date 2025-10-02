@@ -25,3 +25,7 @@ variable "nat_network_interface_id" {
 variable "ami" {
   type = string
 }
+
+variable "availability_zone" {
+  type = string
+}

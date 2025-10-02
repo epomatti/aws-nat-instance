@@ -25,3 +25,7 @@ variable "userdata" {
 variable "create_eip" {
   type = bool
 }
+
+variable "availability_zone" {
+  type = string
+}

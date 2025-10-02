@@ -14,6 +14,8 @@ resource "aws_instance" "server" {
   iam_instance_profile = aws_iam_instance_profile.main.id
   user_data            = file("${path.module}/userdata/ubuntu.sh")
 
+  availability_zone = var.availability_zone
+
   # Enables metadata V2
   metadata_options {
     http_endpoint = "enabled"

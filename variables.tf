@@ -78,3 +78,72 @@ variable "create_private_subnet_exclusion" {
 variable "create_nat_gateway" {
   type = bool
 }
+
+### Lambda ###
+variable "lambda_handler_zip" {
+  type = string
+}
+
+variable "lambda_memory_size" {
+  type = number
+}
+
+variable "lambda_timeout" {
+  type = number
+}
+
+variable "lambda_architectures" {
+  type = list(string)
+}
+
+variable "lambda_runtime" {
+  type = string
+}
+
+variable "lambda_handler" {
+  type = string
+}
+
+variable "lambda_log_format" {
+  type = string
+}
+
+variable "lambda_application_log_level" {
+  type = string
+}
+
+variable "lambda_system_log_level" {
+  type = string
+}
+
+
+### RDS ###
+variable "rds_engine" {
+  type = string
+}
+
+variable "rds_instance_class" {
+  type = string
+}
+
+variable "rds_port" {
+  type = number
+}
+
+variable "rds_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "rds_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "rds_engine_version" {
+  type = string
+}
+
+variable "rds_publicly_accessible" {
+  type = bool
+}
