@@ -202,9 +202,7 @@ sam local invoke HelloWorldFunction
 Update the function code:
 
 ```sh
-sam build
-aws lambda update-function-code --function-name litware \
-  --zip-file fileb://myFunction.zip
+make update-function-code
 ```
 
 Invoke remotely:
@@ -217,8 +215,8 @@ For automation, use the [update-function-configuration][awscli-update-function-c
 
 ```sh
 aws lambda update-function-configuration \
-    --function-name YourLambdaFunctionName \
-    --role "arn:aws:iam::1234567890:role/role_name" \
+    --function-name corp \
+    --role "arn:aws:iam::0000000000:role/corp-lambda-role" \
     --vpc-config '{"SubnetIds": ["subnet-xxxxxxxxxxxxxxxxx", "subnet-yyyyyyyyyyyyyyyyy"], "SecurityGroupIds": ["sg-zzzzzzzzzzzzzzzzz"]}'
 ```
 
