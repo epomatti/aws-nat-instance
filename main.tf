@@ -44,8 +44,8 @@ module "server" {
   private_subnet1_id       = module.vpc.subnet_private1_id
   private_subnet2_id       = module.vpc.subnet_private2_id
   region                   = var.region
-  route_table1_id           = module.vpc.private_route_table1_id
-  route_table2_id           = module.vpc.private_route_table2_id
+  route_table1_id          = module.vpc.private_route_table1_id
+  route_table2_id          = module.vpc.private_route_table2_id
   nat_network_interface_id = var.create_nat_gateway ? module.nat-gateway[0].network_interface_id : module.nat-instance[0].network_interface_id
   ami                      = var.ami
   availability_zone        = module.vpc.primary_az
@@ -101,6 +101,11 @@ module "iam_lambda" {
   aws_region = var.region
 }
 
+module "iam_lambda2" {
+  source   = "./modules/iam/lambda2"
+  workload = var.workload
+}
+
 module "cloudwatch" {
   source = "./modules/cloudwatch"
 }
@@ -146,22 +151,15 @@ module "rds" {
 module "lambda2" {
   source                       = "./modules/lambda2"
   name                         = var.workload
-  execution_role_arn           = module.iam_lambda.execution_role_arn
+  execution_role_arn           = module.iam_lambda2.execution_role_arn
   lambda_handler_zip           = var.lambda_handler_zip
   lambda_architectures         = var.lambda_architectures
   lambda_runtime               = var.lambda_runtime
   lambda_handler               = var.lambda_handler
   memory_size                  = var.lambda_memory_size
   timeout                      = var.lambda_timeout
-  vpc_id                       = module.vpc.vpc_id
   lambda_log_format            = var.lambda_log_format
   lambda_log_group_name        = module.cloudwatch.lambda_name
   lambda_application_log_level = var.lambda_application_log_level
   lambda_system_log_level      = var.lambda_system_log_level
-
-  ssm_postgresql_address  = module.ssm.postgresql_address_name
-  ssm_postgresql_username = module.ssm.postgresql_username_name
-  ssm_postgresql_password = module.ssm.postgresql_password_name
-
-  vpc_cidr_block = module.vpc.vpc_cidr_block
 }

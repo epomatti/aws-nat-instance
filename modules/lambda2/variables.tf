@@ -45,23 +45,3 @@ variable "lambda_application_log_level" {
 variable "lambda_system_log_level" {
   type = string
 }
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "ssm_postgresql_address" {
-  type = string
-}
-
-variable "ssm_postgresql_username" {
-  type = string
-}
-
-variable "ssm_postgresql_password" {
-  type = string
-}
-
-variable "vpc_cidr_block" {
-  type = string
-}
