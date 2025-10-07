@@ -186,11 +186,11 @@ Additional reference documentation:
 
 ## Lambda VPC
 
-- IAM permissions
+- Lambda IAM permissions
 - Security Group with appropriate port egress rules (e.g.: 80, 443, 5432)
 - Two subnets (recommended)
-
-Limitations 
+- Route tables
+- NAT
 
 To test Lambda VNET integration:
 
@@ -211,6 +211,15 @@ Invoke remotely:
 
 ```sh
 sam remote invoke corp
+```
+
+For automation, use the [update-function-configuration][awscli-update-function-configuration] operation:
+
+```sh
+aws lambda update-function-configuration \
+    --function-name YourLambdaFunctionName \
+    --role "arn:aws:iam::1234567890:role/role_name" \
+    --vpc-config '{"SubnetIds": ["subnet-xxxxxxxxxxxxxxxxx", "subnet-yyyyyyyyyyyyyyyyy"], "SecurityGroupIds": ["sg-zzzzzzzzzzzzzzzzz"]}'
 ```
 
 ## VNS3
@@ -236,3 +245,4 @@ Reference documentation for VNS3:
 
 [1]: https://linuxhint.com/configure-nat-on-ubuntu/
 [2]: https://linuxconfig.org/how-to-make-iptables-rules-persistent-after-reboot-on-linux
+[awscli-update-function-configuration]: https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-configuration.html

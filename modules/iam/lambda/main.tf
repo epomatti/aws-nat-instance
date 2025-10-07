@@ -2,18 +2,6 @@ data "aws_caller_identity" "current" {}
 
 locals {
   current_account_id = data.aws_caller_identity.current.account_id
-  vpc_actions = [
-    "ec2:CreateNetworkInterface",
-    "ec2:DescribeNetworkInterfaces",
-    "ec2:DescribeSubnets",
-    "ec2:DeleteNetworkInterface",
-    "ec2:AssignPrivateIpAddresses",
-    "ec2:UnassignPrivateIpAddresses",
-    "ec2:DetachNetworkInterface",
-    "ec2:DescribeSecurityGroups",
-    "ec2:DescribeVpcs",
-    "ec2:getSecurityGroupsForVpc"
-  ]
 }
 
 resource "aws_iam_role" "lambda" {
@@ -34,6 +22,21 @@ resource "aws_iam_role" "lambda" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "AmazonSSMReadOnlyAccess" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecutionRole" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "AWSLambdaVPCAccessExecutionRole" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
 resource "aws_iam_policy" "default" {
   name = "apprunner-lambda-policy"
 
@@ -41,15 +44,17 @@ resource "aws_iam_policy" "default" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Sid" : "LambdaVPCInjection"
-        "Effect" : "Allow",
-        "Action" : "${local.vpc_actions}",
-        "Resource" : ["*"]
-      },
-      {
         "Sid" : "LeastPrivilegeLambdaDeny"
         "Effect" : "Deny",
-        "Action" : "${local.vpc_actions}",
+        "Action" : [
+          "ec2:CreateNetworkInterface",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DescribeSubnets",
+          "ec2:DetachNetworkInterface",
+          "ec2:AssignPrivateIpAddresses",
+          "ec2:UnassignPrivateIpAddresses"
+        ],
         "Resource" : ["*"],
         "Condition" : {
           "ArnEquals" : {
@@ -66,14 +71,4 @@ resource "aws_iam_policy" "default" {
 resource "aws_iam_role_policy_attachment" "default" {
   role       = aws_iam_role.lambda.name
   policy_arn = aws_iam_policy.default.arn
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonSSMReadOnlyAccess" {
-  role       = aws_iam_role.lambda.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecutionRole" {
-  role       = aws_iam_role.lambda.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
