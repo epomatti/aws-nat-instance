@@ -59,7 +59,7 @@ module "server" {
   route_table1_id          = module.vpc.private_route_table1_id
   route_table2_id          = module.vpc.private_route_table2_id
   nat_network_interface_id = var.create_nat_gateway ? module.nat_gateway[0].network_interface_id : module.nat_instance[0].network_interface_id
-  ami                      = var.ami
+  ami                      = var.private_server_ami
   availability_zone        = module.vpc.primary_az
   vpc_cidr_block           = module.vpc.vpc_cidr_block
 }

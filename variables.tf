@@ -151,3 +151,7 @@ variable "rds_engine_version" {
 variable "rds_publicly_accessible" {
   type = bool
 }
+
+variable "private_server_ami" {
+  type = string
+}

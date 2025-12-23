@@ -15,12 +15,6 @@ resource "aws_ssm_parameter" "usg_bucket" {
   value = var.usg_bucket
 }
 
-resource "aws_ssm_parameter" "usg_bucket" {
-  name  = "/ubuntu_pro/usg_bucket"
-  type  = "String"
-  value = var.usg_bucket
-}
-
 resource "aws_ssm_parameter" "aws_region" {
   name  = "/ubuntu_pro/region"
   type  = "String"
