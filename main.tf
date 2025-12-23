@@ -16,6 +16,7 @@ module "vpc" {
 module "ssm" {
   source              = "./modules/ssm"
   usg_bucket          = module.s3.usg_bucket
+  aws_region          = var.region
   postgresql_address  = var.create_rds == true ? module.rds.address : "{}"
   postgresql_username = var.rds_username
   postgresql_password = var.rds_password
@@ -27,6 +28,7 @@ module "nat_instance" {
   workload          = var.workload
   vpc_id            = module.vpc.vpc_id
   subnet            = module.vpc.subnet_public1_id
+  vpc_cidr_block    = module.vpc.vpc_cidr_block
   instance_type     = var.instance_type
   ami               = var.ami
   userdata          = var.userdata

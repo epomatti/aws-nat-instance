@@ -29,3 +29,7 @@ variable "create_eip" {
 variable "availability_zone" {
   type = string
 }
+
+variable "vpc_cidr_block" {
+  type = string
+}

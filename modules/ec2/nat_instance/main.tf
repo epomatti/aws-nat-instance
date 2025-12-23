@@ -96,16 +96,12 @@ resource "aws_security_group" "nat_instance" {
   }
 }
 
-data "aws_vpc" "selected" {
-  id = var.vpc_id
-}
-
 resource "aws_security_group_rule" "ingress_http" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "TCP"
-  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  cidr_blocks       = [var.vpc_cidr_block]
   security_group_id = aws_security_group.nat_instance.id
 }
 
@@ -114,7 +110,7 @@ resource "aws_security_group_rule" "ingress_https" {
   from_port         = 443
   to_port           = 443
   protocol          = "TCP"
-  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  cidr_blocks       = [var.vpc_cidr_block]
   security_group_id = aws_security_group.nat_instance.id
 }
 
@@ -142,7 +138,7 @@ resource "aws_security_group_rule" "ingress_icmp" {
   from_port         = -1
   to_port           = -1
   protocol          = "icmp"
-  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  cidr_blocks       = [var.vpc_cidr_block]
   security_group_id = aws_security_group.nat_instance.id
 }
 

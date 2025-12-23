@@ -1,6 +1,7 @@
 locals {
-  random_affix = random_string.random_suffix.result
-  file_path    = "${path.module}/usg/jammy-server-level1.xml"
+  random_affix         = random_string.random_suffix.result
+  file_path            = "${path.module}/usg/22_04-server-level1.xml"
+  file_path_ubuntu2404 = "${path.module}/usg/ubuntu2404_CIS_1.xml"
 }
 
 resource "random_string" "random_suffix" {
@@ -29,4 +30,11 @@ resource "aws_s3_object" "tailor" {
   key    = "tailor.xml"
   source = local.file_path
   etag   = filemd5(local.file_path)
+}
+
+resource "aws_s3_object" "ubuntu2404" {
+  bucket = aws_s3_bucket.main.id
+  key    = "ubuntu2404_CIS_1.xml"
+  source = local.file_path_ubuntu2404
+  etag   = filemd5(local.file_path_ubuntu2404)
 }

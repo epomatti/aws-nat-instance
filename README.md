@@ -70,6 +70,13 @@ vpc_nat_subnet_internet_gateway_exclusion_mode     = "allow-bidirectional" # "al
 vpc_private_subnet_internet_gateway_exclusion_mode = "allow-bidirectional" # "allow-bidirectional", "allow-egress"
 ```
 
+## SSM
+
+```sh
+aws ssm get-parameters --names usg_bucket region --query Parameter.Value --output text
+aws ssm get-parameters --names usg_bucket region --query "Parameters[*].Value" --output text
+```
+
 ## Ubuntu Pro USG
 
 When applying Ubuntu Pro hardening with USG, additional configuration is required. The CIS benchmark rules will constraint the NAT instance capabilities.
