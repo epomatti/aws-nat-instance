@@ -13,9 +13,17 @@ module "vpc" {
   workload = var.workload
 }
 
-module "nat-instance" {
+module "ssm" {
+  source              = "./modules/ssm"
+  usg_bucket          = module.s3.usg_bucket
+  postgresql_address  = var.create_rds == true ? module.rds.address : "{}"
+  postgresql_username = var.rds_username
+  postgresql_password = var.rds_password
+}
+
+module "nat_instance" {
   count             = var.create_nat_instance == true ? 1 : 0
-  source            = "./modules/ec2/nat-instance"
+  source            = "./modules/ec2/nat_instance"
   workload          = var.workload
   vpc_id            = module.vpc.vpc_id
   subnet            = module.vpc.subnet_public1_id
@@ -24,11 +32,13 @@ module "nat-instance" {
   userdata          = var.userdata
   create_eip        = var.create_eip
   availability_zone = module.vpc.primary_az
+
+  depends_on = [module.ssm]
 }
 
 module "cohesive_vns3" {
   count         = var.create_cohesive_nat == true ? 1 : 0
-  source        = "./modules/vns3-nate"
+  source        = "./modules/vns3_nate"
   workload      = var.workload
   vpc_id        = module.vpc.vpc_id
   subnet        = module.vpc.subnet_public1_id
@@ -46,7 +56,7 @@ module "server" {
   region                   = var.region
   route_table1_id          = module.vpc.private_route_table1_id
   route_table2_id          = module.vpc.private_route_table2_id
-  nat_network_interface_id = var.create_nat_gateway ? module.nat-gateway[0].network_interface_id : module.nat-instance[0].network_interface_id
+  nat_network_interface_id = var.create_nat_gateway ? module.nat_gateway[0].network_interface_id : module.nat_instance[0].network_interface_id
   ami                      = var.ami
   availability_zone        = module.vpc.primary_az
   vpc_cidr_block           = module.vpc.vpc_cidr_block
@@ -63,7 +73,7 @@ module "vpc_endpoints" {
 
 module "vpc_block_public_access" {
   count  = var.apply_vpc_bpa == true ? 1 : 0
-  source = "./modules/vpc-bpa"
+  source = "./modules/vpc_bpa"
 
   create_nat_subnet_exclusion     = var.create_nat_subnet_exclusion
   create_private_subnet_exclusion = var.create_private_subnet_exclusion
@@ -76,23 +86,15 @@ module "vpc_block_public_access" {
   private_subnet_id = module.vpc.subnet_private1_id
 }
 
-module "nat-gateway" {
+module "nat_gateway" {
   count            = var.create_nat_gateway == true ? 1 : 0
-  source           = "./modules/nat-gateway"
+  source           = "./modules/nat_gateway"
   workload         = var.workload
   public_subnet_id = module.vpc.subnet_public1_id
 }
 
 module "s3" {
   source = "./modules/s3"
-}
-
-module "ssm" {
-  source              = "./modules/ssm"
-  usg_bucket          = module.s3.usg_bucket
-  postgresql_address  = module.rds.address
-  postgresql_username = var.rds_username
-  postgresql_password = var.rds_password
 }
 
 module "iam_lambda" {
@@ -134,6 +136,7 @@ module "lambda" {
 }
 
 module "rds" {
+  count                   = var.create_rds ? 1 : 0
   source                  = "./modules/rds"
   vpc_id                  = module.vpc.vpc_id
   public_subnets_ids      = [module.vpc.subnet_private1_id, module.vpc.subnet_private2_id]

@@ -118,6 +118,10 @@ variable "lambda_system_log_level" {
 
 
 ### RDS ###
+variable "create_rds" {
+  type = bool
+}
+
 variable "rds_engine" {
   type = string
 }

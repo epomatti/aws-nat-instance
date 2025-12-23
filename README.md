@@ -10,7 +10,7 @@ Copy the variables template:
 cp config/template.tfvars .auto.tfvars
 ```
 
-Create the optional key for NATe:
+(Optional) Key for the VNS3 NATe:
 
 ```sh
 mkdir keys && ssh-keygen -f keys/vns3
@@ -20,7 +20,7 @@ Apply your infrastructure:
 
 ```sh
 terraform init
-terraform apply -auto-approve
+terraform apply
 ```
 
 After creating the resources, confirm that the NAT instance has been set up correctly:
@@ -33,7 +33,7 @@ sysctl -ar ip_forward
 cat /proc/sys/net/ipv4/ip_forward
 ```
 
-Now set `create_private_server = true` and apply again.
+Once the NAT instance is functional, set `create_private_server = true` and apply again.
 
 To test it, connect to the private server using Sessions Manager.
 
